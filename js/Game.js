@@ -10,6 +10,7 @@ class Game {
     this.playerMoving = false;
     //C41//TA
     this.leftKeyActive = false;
+    this.balst=false;
   }
 
   getState() {
@@ -171,9 +172,16 @@ class Game {
           fill("red");
           ellipse(x, y, 60, 60);
 
+        if(player.life<=0){
+        this.blast=true;
+        this.playerMoving=false;
+
+        }
+
           this.handleFuel(index);
           this.handlePowerCoins(index);
           this.handleObstacleCollision(index); //C41//SA
+          this.handleCaeACollisionWithCarB(index);
 
           // Changing camera position in y direction
           camera.position.y = cars[index - 1].position.y;
@@ -202,6 +210,40 @@ class Game {
       drawSprites();
     }
   }
+  handleCaeACollisionWithCarB(index){
+
+    if(index===1){
+
+      if(cars[index-1].collide(cars[1])){
+
+      if(this.leftKeyActive){
+        player.positionX+=100
+      }else{
+        player.positionX-=100
+      }
+      if(player.life>0){
+        player.life-=184/4
+      }
+      player.update();
+      }
+    }
+    if(index===2){
+
+      if(cars[index-1].collide(cars[0])){
+
+      if(this.leftKeyActive){
+        player.positionX+=100
+      }else{
+        player.positionX-=100
+      }
+      if(player.life>0){
+        player.life-=184/4
+      }
+      player.update();
+      }
+    }
+  }
+
 
   handleFuel(index) {
     // Adding fuel
@@ -309,8 +351,8 @@ class Game {
     this.leader1.html(leader1);
     this.leader2.html(leader2);
   }
-
   handlePlayerControls() {
+    if(!this.blast){
     if (keyIsDown(UP_ARROW)) {
       this.playerMoving = true;
       player.positionY += 10;
@@ -329,6 +371,7 @@ class Game {
       player.update();
     }
   }
+}
 
   //C41 //SA
   handleObstacleCollision(index) {
